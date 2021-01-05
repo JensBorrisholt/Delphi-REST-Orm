@@ -67,3 +67,8 @@ __recovery/
 
 # Boss dependency manager vendor folder https://github.com/HashLoad/boss
 modules/
+
+*.skincfg
+
+RestServer/RestServer/bin/
+RestServer/RestServer/obj/
