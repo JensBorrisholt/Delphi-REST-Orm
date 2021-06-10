@@ -1,4 +1,4 @@
-# DelpliRestORM
+# Delphi-REST-Orm
 Delphi Rest Orm - At simple  yet powerful ORM to query a WebService
 
 ## syntax Examples ##
