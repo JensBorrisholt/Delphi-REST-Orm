@@ -102,14 +102,16 @@
             <Form>Form59</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\ORM\DelphiRestOrm.ORM.Request.pas"/>
-        <DCCReference Include="..\ORM\Helpers\DelphiRestOrm.ORM.Helper.ObjectContainer.pas"/>
-        <DCCReference Include="..\ORM\DelphiRestOrm.ORM.IRequest.pas"/>
-        <DCCReference Include="PersonU.pas"/>
-        <DCCReference Include="..\ORM\DelphiRestOrm.ORM.Response.pas"/>
-        <DCCReference Include="..\ORM\Helpers\DelphiRestOrm.ORM.Helper.GenericListHelper.pas"/>
-        <DCCReference Include="..\ORM\Helpers\DelphiRestOrm.ORM.Helper.Azure.pas"/>
-        <DCCReference Include="..\ORM\Helpers\DelphiRestOrm.ORM.Helper.ThreadingEx.pas"/>
+        <DCCReference Include="..\..\ORM\DelphiRestOrm.ORM.Request.pas"/>
+        <DCCReference Include="..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.ObjectContainer.pas"/>
+        <DCCReference Include="..\..\ORM\DelphiRestOrm.ORM.IRequest.pas"/>
+        <DCCReference Include="..\..\ORM\DelphiRestOrm.ORM.Response.pas"/>
+        <DCCReference Include="..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.GenericListHelper.pas"/>
+        <DCCReference Include="..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.Azure.pas"/>
+        <DCCReference Include="..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.ThreadingEx.pas"/>
+        <DCCReference Include="..\DTO\PersonU.pas"/>
+        <DCCReference Include="..\DTO\RootU.pas"/>
+        <DCCReference Include="..\DTO\Pkg.Json.DTO.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

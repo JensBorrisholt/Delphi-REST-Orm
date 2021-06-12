@@ -16,6 +16,7 @@ namespace RestServer.Controllers
     [ApiController]
     public class ContactController : ControllerBase
     {
+        // ReSharper disable once InconsistentNaming
         private static readonly Random _random = new Random();
         private static string RandomString(int length)
         {
@@ -31,7 +32,14 @@ namespace RestServer.Controllers
 
         // GET <ContactController>/5
         [HttpGet("{id}")]
-        public Person Get(int id) => new DemoDataContext().Persons.SingleOrDefault(e => e.Index == id);
+        public Person Get(int id)
+        {
+            var result = new DemoDataContext().Persons.SingleOrDefault(e => e.Index == id);
+            if (result == null)
+                throw new ArgumentException($"No person by that id {id} found in the database");
+            return result;
+        }
+
 
 
         // POST <ContactController>

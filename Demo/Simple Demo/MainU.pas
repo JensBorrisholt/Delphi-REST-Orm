@@ -34,7 +34,7 @@ uses
 procedure TForm59.FormCreate(Sender: TObject);
 var
   Container: TObjectContainer;
-  AzureAuthenticator: TAzureAuthenticator;
+//  AzureAuthenticator: TAzureAuthenticator;
   Person: TPerson;
   Persons: TObjectList<TPerson>;
   s: string;
@@ -72,7 +72,6 @@ begin
   Memo1.Lines.Add('');
   Memo1.Lines.Add('** TJsonDTO test **');
   Memo1.Lines.Add('');
-
   Root := NewRequest('https://localhost:44303/Contact').ObjectContainer(Container).Credentials('test', 'test').GET.AsType<TPersons>;
   Memo1.Lines.Add('(Random) Person.Address :' + Persons.Items[Random(Root.Items.Count)].Address);
   (*
