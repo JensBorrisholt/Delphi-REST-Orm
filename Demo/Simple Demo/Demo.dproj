@@ -110,7 +110,7 @@
         <DCCReference Include="..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.Azure.pas"/>
         <DCCReference Include="..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.ThreadingEx.pas"/>
         <DCCReference Include="..\DTO\PersonU.pas"/>
-        <DCCReference Include="..\DTO\RootU.pas"/>
+        <DCCReference Include="..\DTO\PersonsU.pas"/>
         <DCCReference Include="..\DTO\Pkg.Json.DTO.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

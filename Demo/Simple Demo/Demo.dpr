@@ -10,9 +10,8 @@ uses
   DelphiRestOrm.ORM.Helper.GenericListHelper in '..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.GenericListHelper.pas',
   DelphiRestOrm.ORM.Helper.Azure in '..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.Azure.pas',
   DelphiRestOrm.ORM.Helper.ThreadingEx in '..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.ThreadingEx.pas',
-
   PersonU in '..\DTO\PersonU.pas',
-  RootU in '..\DTO\RootU.pas',
+  PersonsU in '..\DTO\PersonsU.pas',
   Pkg.Json.DTO in '..\DTO\Pkg.Json.DTO.pas';
 
 {$R *.res}
