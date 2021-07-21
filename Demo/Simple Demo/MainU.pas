@@ -26,7 +26,7 @@ implementation
 
 uses
   System.Generics.Collections,
-  DelphiRestOrm.ORM.IRequest, DelphiRestOrm.ORM.Response, DelphiRestOrm.ORM.Helper.Azure,
+  DelphiRestOrm.ORM.IRequest, DelphiRestOrm.ORM.Response, DelphiRestOrm.ORM.Helper.Azure, DelphiRestOrm.ORM.Helper.BearerAuth,
 
   PersonsU, PersonU;
 {$R *.dfm}
@@ -34,46 +34,62 @@ uses
 procedure TForm59.FormCreate(Sender: TObject);
 var
   Container: TObjectContainer;
-//  AzureAuthenticator: TAzureAuthenticator;
+// AzureAuthenticator: TAzureAuthenticator;
+  BearerAuthenticator: TBearerAuthenticator;
   Person: TPerson;
   Persons: TObjectList<TPerson>;
   s: string;
   Root: TPersons;
+
+  function Request: IRestRequest;
+  begin
+    Result := NewRequest('https://localhost:44303/Contact').ObjectContainer(Container);
+  end;
+
 begin
+(*
   Memo1.Clear;
   Memo1.Lines.Add('** Get all **');
   Memo1.Lines.Add('');
 
-  s := NewRequest('https://localhost:44303/Contact').Credentials('test', 'test').GET.ToString;
+  s := Request.BasicAuthenticator('test', 'test').GET.ToString;
   Memo1.Lines.Add(s.Substring(0, 1000) + ' ...');
 
   Memo1.Lines.Add('');
   Memo1.Lines.Add('** Get single **');
   Memo1.Lines.Add('');
 
-  s := NewRequest('https://localhost:44303/Contact').GET(8).ToString;
+  s := Request.GET(8).ToString;
   Memo1.Lines.Add(s);
 
   Memo1.Lines.Add('');
   Memo1.Lines.Add('** Get All AsType **');
   Memo1.Lines.Add('');
 
-  Persons := NewRequest('https://localhost:44303/Contact').ObjectContainer(Container).Credentials('test', 'test').GET.AsType<TObjectList<TPerson>>;
+  Persons := Request.BasicAuthenticator('test', 'test').GET.AsType<TObjectList<TPerson>>;
   Memo1.Lines.Add('(Random) Person.Address :' + Persons[Random(Persons.Count)].Address);
 
   Memo1.Lines.Add('');
   Memo1.Lines.Add('** Get Single AsType **');
   Memo1.Lines.Add('');
 
-  Person := NewRequest('https://localhost:44303/Contact').ObjectContainer(Container).Credentials('test', 'test').GET(5).AsType<TPerson>;
+  Person := Request.GET(5).AsType<TPerson>;
   Memo1.Lines.Add('Person.Address :' + Person.Address);
-
 
   Memo1.Lines.Add('');
   Memo1.Lines.Add('** TJsonDTO test **');
   Memo1.Lines.Add('');
-  Root := NewRequest('https://localhost:44303/Contact').ObjectContainer(Container).Credentials('test', 'test').GET.AsType<TPersons>;
+  Root := Request.BasicAuthenticator('test', 'test').GET.AsType<TPersons>;
   Memo1.Lines.Add('(Random) Person.Address :' + Persons.Items[Random(Root.Items.Count)].Address);
+  *)
+ //
+  BearerAuthenticator := TBearerAuthenticator.Create(nil);
+  BearerAuthenticator.AuthorizeEndPoint := 'https://nl1-gls-zip-denmark-dev-app.azurewebsites.net/api/authenticate/client/service';
+  BearerAuthenticator.ClientId := 'gv_gls_authorized_api_client';
+  BearerAuthenticator.ClientSecret := 'jXvkksFBF7J89xOW2zVDFRl0XuGnZnM170ZIEIkkvTM2KaUN67WxgdncEfqKZ0l';
+  s := NewRequest('https://nl1-gls-zip-denmark-dev-app.azurewebsites.net/api/pointOfSale/subscription/byCustomer').Param('4011097310').BearerCredentials(BearerAuthenticator).GET.ToString;
+  Memo1.Lines.Text := s;
+
   (*
 Replace with your own Azure credentials
   AzureAuthenticator := TAzureAuthenticator.Create('aTenantID', 'aClientID', 'aClientSecret', 'aResourceId');
@@ -92,7 +108,7 @@ Replace with your own Azure credentials
     begin
       Memo1.Lines.Add(Response.ToString)
     end).Param(17794452).QueryParam('country', 'DK').AzureCredentials((aTenantID', 'aClientID', 'aClientSecret', 'aResourceId').GET;
-    *)
+ *)
   Container.Free;
 end;
 

@@ -12,7 +12,9 @@ uses
   DelphiRestOrm.ORM.Helper.ThreadingEx in '..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.ThreadingEx.pas',
   PersonU in '..\DTO\PersonU.pas',
   PersonsU in '..\DTO\PersonsU.pas',
-  Pkg.Json.DTO in '..\DTO\Pkg.Json.DTO.pas';
+  Pkg.Json.DTO in '..\DTO\Pkg.Json.DTO.pas',
+  DelphiRestOrm.ORM.Helper.CustomBindAuthenticator in '..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.CustomBindAuthenticator.pas',
+  DelphiRestOrm.ORM.Helper.BearerAuth in '..\..\ORM\Helpers\DelphiRestOrm.ORM.Helper.BearerAuth.pas';
 
 {$R *.res}
 

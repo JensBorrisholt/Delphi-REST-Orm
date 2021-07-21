@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Newtonsoft.Json;
@@ -24,6 +27,7 @@ namespace RestServer.Controllers
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[_random.Next(s.Length)]).ToArray());
         }
+
 
         // GET: <ContactController>
         [Authorize, RequireHttps, HttpGet]
@@ -55,13 +59,22 @@ namespace RestServer.Controllers
             return person;
         }
 
+
         // PUT <ContactController>/5
-        [HttpPut("{id}")]
-        public Person Put(int id, [FromBody] Person value)
+        [HttpPut("{id:int}")]
+        public Person Put(int id)
         {
+
+            Person value = null;
+            using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
+            {
+                var message = reader.ReadToEndAsync().Result;
+
+                value = JsonConvert.DeserializeObject<Person>(message);
+            }
             var context = new DemoDataContext();
             var dbPerson = context.Persons.SingleOrDefault(e => e.Index == id);
-
+            
             if (dbPerson == default(Person))
                 throw new AmbiguousActionException($"No person by that id {id} found in the database");
 

@@ -5,13 +5,16 @@ interface
 uses
   System.Classes, System.Rtti, Rest.Client, Rest.Types,
 
-  DelphiRestOrm.ORM.Response, DelphiRestOrm.ORM.Helper.ObjectContainer, DelphiRestOrm.ORM.Helper.Azure;
+  DelphiRestOrm.ORM.Response, DelphiRestOrm.ORM.Helper.ObjectContainer, DelphiRestOrm.ORM.Helper.Azure,
+
+  DelphiRestOrm.ORM.Helper.BearerAuth;
 
 const
   ctDefault = ctAPPLICATION_JSON;
 
 type
   TOrmCompletionHandler = reference to procedure(const Response: TResponse);
+  TResponse = DelphiRestOrm.ORM.Response.TResponse;
 
   IRestRequest = interface
     ['{C117D3C1-B571-4CD9-A571-3C720DE689CE}']
@@ -121,7 +124,9 @@ type
     function ContentType(aContentType: TRESTContentType = ctDefault; const AOptions: TRESTRequestParameterOptions = [poDoNotEncode]): IRestRequest;
     function AzureCredentials(const aTennantID, aClientID, aClientSecret, aResourceId: string): IRestRequest; overload;
     function AzureCredentials(const aAzureAuthenticator: TAzureAuthenticator): IRestRequest; overload;
-    function Credentials(const aUsername, aPassword: string): IRestRequest;
+    function BearerCredentials(const aAzureAuthenticator: TBearerAuthenticator): IRestRequest; overload;
+    function BasicAuthenticator(const aUsername, aPassword: string): IRestRequest;
+
     function ConnectionTimeOut(const aValue: Integer = 30000): IRestRequest;
     function ObjectContainer(var aObjectContainer: TObjectContainer): IRestRequest;
     function OwnsObjects(const aValue: Boolean = True): IRestRequest;

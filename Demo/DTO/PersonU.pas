@@ -26,7 +26,7 @@ type
     FName: string;
     FPhone: string;
     FPicture: string;
-    FRegistered: string;
+    FRegistered: TDateTime;
   published
     property About: string read FAbout write FAbout;
     property Address: string read FAddress write FAddress;
@@ -47,7 +47,7 @@ type
     property Name: string read FName write FName;
     property Phone: string read FPhone write FPhone;
     property Picture: string read FPicture write FPicture;
-    property Registered: string read FRegistered write FRegistered;
+    property Registered: TDateTime read FRegistered write FRegistered;
   end;
 
 implementation

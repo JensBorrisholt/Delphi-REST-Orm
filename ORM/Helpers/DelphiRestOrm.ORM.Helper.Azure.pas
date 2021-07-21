@@ -3,21 +3,12 @@ unit DelphiRestOrm.ORM.Helper.Azure;
 interface
 
 uses
-  System.SysUtils, System.Classes, Data.Bind.ObjectScope,
-  REST.Authenticator.Basic, REST.Client, REST.Types, REST.Json.Types;
+  System.SysUtils, System.Classes, REST.Client, REST.Types, REST.Json.Types,
+  DelphiRestOrm.ORM.Helper.CustomBindAuthenticator, DelphiRestOrm.ORM.Helper.BearerAuth;
 
 {$M+}
 
 type
-  TCustomBindAuthenticator = class(TCustomAuthenticator)
-  private
-    FBindSource: TSubHTTPBasicAuthenticationBindSource;
-  protected
-    function CreateBindSource: TBaseObjectBindSource; override;
-  published
-    property BindSource: TSubHTTPBasicAuthenticationBindSource read FBindSource;
-  end;
-
   TAccessToken = class
   strict private
     FContainsToken: Boolean;
@@ -105,13 +96,8 @@ end;
 
 function TAzureAuthenticator.GetAccessToken: TAccessToken;
 begin
-  Result :=
-    NewRequest(AuthorizeEndPoint)
-    .AddAuthParameter('grant_type', 'client_credentials')
-    .AddAuthParameter('client_id', ClientId)
-    .AddAuthParameter('client_secret', ClientSecret)
-    .AddAuthParameter('resource', ResourceId)
-    .Post.AsType<TAccessToken>;
+  Result := NewRequest(AuthorizeEndPoint).AddAuthParameter('grant_type', 'client_credentials').AddAuthParameter('client_id', ClientId).AddAuthParameter('client_secret', ClientSecret)
+    .AddAuthParameter('resource', ResourceId).Post.AsType<TAccessToken>;
 
   Result.ContainsToken := (Result.TokenType = 'Bearer') and (Result.AccessToken.Length > 0);
 end;
@@ -163,17 +149,6 @@ begin
   end;
 
   AuthorizeEndPoint := AuthorizeEndPointTemplate.Replace('{tenant}', FTenantId);
-end;
-
-{ TCustomBindAuthenticator }
-
-function TCustomBindAuthenticator.CreateBindSource: TBaseObjectBindSource;
-begin
-  FBindSource := TSubHTTPBasicAuthenticationBindSource.Create(Self);
-  FBindSource.Name := 'BindSource'; { Do not localize }
-  FBindSource.SetSubComponent(True);
-  FBindSource.Authenticator := Self;
-  Result := FBindSource;
 end;
 
 end.

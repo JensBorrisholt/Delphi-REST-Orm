@@ -5,7 +5,9 @@ interface
 uses
   System.Classes, System.Rtti, System.Generics.Collections, System.Threading, REST.Client, REST.Types,
 
-  DelphiRestOrm.ORM.Helper.ObjectContainer, DelphiRestOrm.ORM.Helper.Azure, DelphiRestOrm.ORM.IRequest, DelphiRestOrm.ORM.Response;
+  DelphiRestOrm.ORM.Helper.ObjectContainer, DelphiRestOrm.ORM.Helper.Azure, DelphiRestOrm.ORM.Helper.BearerAuth,
+  DelphiRestOrm.ORM.IRequest, DelphiRestOrm.ORM.Response;
+
 {$M+}
 
 type
@@ -47,7 +49,8 @@ type
     function ContentType(aContentType: TRESTContentType = ctDefault; const AOptions: TRESTRequestParameterOptions = [poDoNotEncode]): IRestRequest;
     function AzureCredentials(const aTennantID, aClientID, aClientSecret, aResourceId: string): IRestRequest; overload;
     function AzureCredentials(const aAzureAuthenticator: TAzureAuthenticator): IRestRequest; overload;
-    function Credentials(const aUsername, aPassword: string): IRestRequest;
+    function BearerCredentials(const aAzureAuthenticator: TBearerAuthenticator): IRestRequest; overload;
+    function BasicAuthenticator(const aUsername, aPassword: string): IRestRequest;
     function ObjectContainer(var aObjectContainer: TObjectContainer): IRestRequest;
     function IsCancelled: Boolean;
     function Post: TResponse; overload;
@@ -101,7 +104,7 @@ end;
 
 function TRestRequest.AddBody(const aBodyContent: string; aContentType: TRESTContentType): IRestRequest;
 begin
-  FRequest.AddBody(aBodyContent, aContentType);
+  FRequest.Body.Add(aBodyContent, aContentType);
   Result := Self;
 end;
 
@@ -135,6 +138,16 @@ end;
 function TRestRequest.BaseApiURL: string;
 begin
   Result := FBaseURL;
+end;
+
+function TRestRequest.BasicAuthenticator(const aUsername, aPassword: string): IRestRequest;
+begin
+  Result := SetAuthenticator(THTTPBasicAuthenticator.Create(aUsername, aPassword))
+end;
+
+function TRestRequest.BearerCredentials(const aAzureAuthenticator: TBearerAuthenticator): IRestRequest;
+begin
+  Result := SetAuthenticator(aAzureAuthenticator);
 end;
 
 function TRestRequest.AddFile(const AName, AFileName: string; aContentType: TRESTContentType): IRestRequest;
@@ -199,8 +212,11 @@ end;
 
 function TRestRequest.DoExecute(aObject: TObject; aRESTRequestMethod: TRESTRequestMethod): TResponse;
 begin
-  FDTOObjectContainer.Add(aObject);
-  AddBody(aObject.ToString, ctDefault);
+  if aObject <> nil then
+  begin
+    FDTOObjectContainer.Add(aObject);
+    AddBody(aObject.ToString, ctDefault);
+  end;
   Result := DoExecute(aRESTRequestMethod);
 end;
 
@@ -227,7 +243,6 @@ function TRestRequest.DoExecute(aRESTRequestMethod: TRESTRequestMethod): TRespon
 
     for Pair in FQueryParams do
       Result := Result + Pair.Key + '=' + Pair.Value;
-
   end;
 
 var
@@ -239,9 +254,15 @@ begin
   LCLient := FClient;
   LRequest := FRequest;
   LCompletionHandler := FCompletionHandler;
-
+/// application/x-www-form-urlencoded
   FClient.BaseURL := GetURL;
   FRequest.Method := aRESTRequestMethod;
+
+//  var
+//  AParameter := LRequest.Params.AddItem;
+//  AParameter.ContentType := ctAPPLICATION_JSON;
+//  AParameter.name := 'Content-Type';
+//  AParameter.Value := 'application/json';
 
   if not FAsyncCall then
   begin
@@ -336,11 +357,6 @@ function TRestRequest.ResetToDefaults: IRestRequest;
 begin
   FRequest.ResetToDefaults;
   Result := Self;
-end;
-
-function TRestRequest.Credentials(const aUsername, aPassword: string): IRestRequest;
-begin
-  Result := SetAuthenticator(THTTPBasicAuthenticator.Create(aUsername, aPassword))
 end;
 
 function TRestRequest.ConnectionTimeOut(const aValue: Integer): IRestRequest;
